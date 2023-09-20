@@ -13,14 +13,14 @@ class SendReminderEmails extends Command
      *
      * @var string
      */
-    protected $signature = 'email:send-reminders';
+    protected $signature = 'email:sendmail';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Sending email to evry student at 7:00 AM';
 
     /**
      * Execute the console command.
@@ -30,17 +30,14 @@ class SendReminderEmails extends Command
         $students = User::where('user_type_id',2)->with('courses')->get();
 
         foreach ($students as $student) {
-
             // Build the email content here
             $studentName = $student->name;
             $courseNames = $student->courses->pluck('name')->implode(', ');
-
             // Send the email
-            Mail::raw("Hello $studentName, your courses are: $courseNames", function ($message) use ($student) {
+            Mail::raw("Hello $studentName, your courses are: $courseNames, Please check your Courses progress", function ($message) use ($student) {
                 $message->to($student->email)->subject('Daily Reminder to Check Your Course Progress');
             });
         }
-
         $this->info('Reminder emails sent successfully.');
     }
 }

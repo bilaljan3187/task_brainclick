@@ -22,25 +22,31 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('v1')->as('v1.')->middleware('auth:sanctum')->group(function(){
+Route::prefix('v1')->as('v1.')->group(function(){
     // Route::apiResource('tasks',TaskController::class);
-    // teacher routes
-    Route::middleware('teacher')->group(function(){
-        Route::apiResource('course',CourseController::class);
-    });
+        Route::middleware('auth:sanctum')->group(function(){
 
-    // student routes
-    Route::middleware('student')->group(function(){
-        Route::post('course_subscribe',[StudentCourseController::class,'subscribe']);
-        Route::post('student_course_list',[StudentCourseController::class,'list']);
-    });
-    Route::post('logout',function(){
-        return response()->json('hello');
-    });
+            // teacher routes
+            Route::middleware('teacher')->group(function(){
+                Route::apiResource('course',CourseController::class);
+            });
+
+            // student routes
+            Route::middleware('student')->group(function(){
+                Route::post('course_subscribe',[StudentCourseController::class,'subscribe']);
+                Route::post('student_course_list',[StudentCourseController::class,'list']);
+            });
+            Route::post('logout',function(){
+                return response()->json('hello');
+            });
+
+        });
+
+        Route::get('course_list',[CourseController::class,'index']);
+        Route::post('register',RegisterController::class);
+        Route::post('login',LoginController::class);
 
 });
-Route::get('course_list',[CourseController::class,'index']);
-Route::post('register',RegisterController::class);
-Route::post('login',LoginController::class);
+
 
 
