@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\Teacher\CourseController;
+use App\Http\Controllers\Api\Student\StudentCourseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +31,8 @@ Route::prefix('v1')->as('v1.')->middleware('auth:sanctum')->group(function(){
 
     // student routes
     Route::middleware('student')->group(function(){
-
+        Route::post('course_subscribe',[StudentCourseController::class,'subscribe']);
+        Route::post('student_course_list',[StudentCourseController::class,'list']);
     });
     Route::post('logout',function(){
         return response()->json('hello');
